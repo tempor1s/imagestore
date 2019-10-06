@@ -13,11 +13,14 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
-
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li class="pr-md-3"><a href="{{ url_for("login") }}"><span class="fas fa-user"></span> Login</a></li>
-            <li><a href="{{ url_for("register") }}"><span class="fas fa-door-open"></span> Sign Up</a></li>
+            {% if username %}
+                <li><a href="{{ url_for("logout") }}"><span class="fas fa-door-open"></span> Logout</a></li>
+            {% else %}
+                <li class="pr-md-3"><a href="{{ url_for("login") }}"><span class="fas fa-user"></span> Login</a></li>
+                <li><a href="{{ url_for("register") }}"><span class="fas fa-door-open"></span> Sign Up</a></li>
+            {% endif %}
         </ul>
     </div>
 </nav>

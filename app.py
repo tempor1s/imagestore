@@ -21,6 +21,7 @@ users = db.users
 @app.route('/')
 def index():
     username = None
+    authenticated = None
     if 'username' in session:
         username = session['username']
 
@@ -29,6 +30,10 @@ def index():
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
+    if 'username' in session:
+        return redirect(url_for('index'))
+
+
     if request.method == 'POST':
         login_user = users.find_one({'username': request.form['username']})
 
@@ -42,8 +47,17 @@ def login():
     return render_template('login.html')
 
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    if 'username' in session:
+        return redirect(url_for('index'))
+
     if request.method == 'POST':
         print(request.form.to_dict())
         exisiting_user = users.find_one({'username': request.form['username']})
