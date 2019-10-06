@@ -2,8 +2,9 @@
 {% block content %}
 <div class="text-center">
     <h1>Image Store</h1>
-    {% if username %}
-        <h1>You are now logged in as {{ username }}</h1> 
+    {% if user %}
+        <h1>You are now logged in as {{ user.username }}</h1>
+        <h3>Your user id is {{ user.user_id }}</h3>
     {% endif %}
 </div>
 {% endblock %}

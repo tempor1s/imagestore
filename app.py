@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, session
+from bson.objectid import ObjectId
 from pymongo import MongoClient
 import bcrypt
+import json
+from bson import json_util
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -17,31 +20,66 @@ db = client.get_default_database()
 images = db.images
 users = db.users
 
+# TODO: Implement ID into user session for ez image access
+# TODO: Implement file upload image hosting? - could be for intensive
 
-@app.route('/')
+# Gameplan
+# Add image with a ref to the user id as association
+# For route below, just do a search for everything in image collection that had an association for user
+
+
+@app.route('/', methods=['GET'])
 def index():
-    username = None
+    user = None
     authenticated = None
-    if 'username' in session:
-        username = session['username']
+    if 'user' in session:
+        # TODO: Implement image list if user is logged in
+        user = session['user']
+        # user_id = session['user_id']
 
-    return render_template('index.html', username=username)
+    return render_template('index.html', user=user)
+
+
+@app.route('/images/add', methods=['POST', 'GET'])
+def add_image():
+    """Add a new image to a user storage."""
+    if 'user' not in session:
+        return redirect(url_for('login'))
+
+    user_id = session['user']['user_id']
+
+    if request.method == 'POST':
+        image = {
+            'title': request.form['title'],
+            'url': request.form['url'],
+            'user_id': user_id
+        }
+
+        image_id = images.insert_one(image)
+
+    return render_template('add_image.html')
 
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
-    if 'username' in session:
+    if 'user' in session:
         return redirect(url_for('index'))
-
 
     if request.method == 'POST':
         login_user = users.find_one({'username': request.form['username']})
 
         if login_user:
             if bcrypt.hashpw(request.form['password'].encode('utf-8'), login_user['password']) == login_user['password']:
-                session['username'] = request.form['username']
+                print(login_user['_id'])
+                data = {
+                    'username': request.form['username'],
+                    'user_id': login_user['_id']
+                }
+
+                session['user'] = json.loads(json_util.dumps(data))
+                # session['user'] = request.form['username']
                 return redirect(url_for('index'))
-                
+
         # TODO: Handle invalid username + password combo
 
     return render_template('login.html')
@@ -55,19 +93,24 @@ def logout():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if 'username' in session:
+    if 'user' in session:
         return redirect(url_for('index'))
 
     if request.method == 'POST':
-        print(request.form.to_dict())
         exisiting_user = users.find_one({'username': request.form['username']})
 
         if exisiting_user is None:
             hashpass = bcrypt.hashpw(
                 request.form['password'].encode('utf-8'), bcrypt.gensalt())
-            users.insert(
-                {'username': request.form['username'], 'email': request.form['email'], 'password': hashpass})
-            session['username'] = request.form['username']
+            doc_id = users.insert_one(
+                {'username': request.form['username'], 'email': request.form['email'], 'password': hashpass}).inserted_id
+
+            data = {
+                'username': request.form['username'],
+                'user_id': ObjectId(doc_id)
+            }
+            session['user'] = json.loads(json_util.dumps(data))
+
             return redirect(url_for('index'))
             # TODO: Handle username already taken
 

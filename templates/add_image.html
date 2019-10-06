@@ -1,0 +1,25 @@
+{% extends 'base.html' %} {% block content %}
+<form action="/images/add" method="POST">
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input
+            type="text"
+            class="form-control"
+            id="title"
+            aria-describedby="title"
+            placeholder="Image Title"
+            name="title"
+        />
+    </div>
+    <div class="form-group">
+        <label for="url">Image URL</label>
+        <input
+            type="url"
+            class="form-control"
+            id="url"
+            placeholder="Image URL"
+            name='url'
+        />
+    </div>
+</form>
+{% endblock %}
