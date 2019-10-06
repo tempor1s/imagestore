@@ -24,20 +24,22 @@ users = db.users
 # TODO: Implement ID into user session for ez image access
 # TODO: Implement file upload image hosting? - could be for intensive
 
-# Gameplan
-# Add image with a ref to the user id as association
-# For route below, just do a search for everything in image collection that had an association for user
-
 
 @app.route('/', methods=['GET'])
 def index():
     user = None
     authenticated = None
+    user_images = None
     if 'user' in session:
-        # TODO: Implement image list if user is logged in
+        
+        # Hacky thing to get this to work lmao
         user = session['user']
+        dumped_user = dumps(user)
+        loaded_user = loads(dumped_user)
 
-    return render_template('index.html', user=user)
+        user_images = images.find({'user_id': loaded_user['user_id']})
+
+    return render_template('index.html', user=user, user_images=user_images)
 
 
 @app.route('/images/add', methods=['POST', 'GET'])

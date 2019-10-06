@@ -4,7 +4,11 @@
     <h1>Image Store</h1>
     {% if user %}
         <h1>You are now logged in as {{ user.username }}</h1>
-        <h3>Your user id is {{ user.user_id }}</h3>
+        
+        {% for image in user_images %}
+            {{ image.title }}
+            {{ image.url }}
+        {% endfor %}
     {% endif %}
 </div>
 {% endblock %}
