@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-from bson.objectid import ObjectId
 from pymongo import MongoClient
 import bcrypt
 import json
 from bson import json_util
+from bson.json_util import loads, dumps
+from bson.objectid import ObjectId
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -35,7 +36,6 @@ def index():
     if 'user' in session:
         # TODO: Implement image list if user is logged in
         user = session['user']
-        # user_id = session['user_id']
 
     return render_template('index.html', user=user)
 
@@ -46,18 +46,20 @@ def add_image():
     if 'user' not in session:
         return redirect(url_for('login'))
 
-    user_id = session['user']['user_id']
+    user = session['user']
+    dumped_user = dumps(user)
+    loaded_user = loads(dumped_user)
 
     if request.method == 'POST':
         image = {
             'title': request.form['title'],
             'url': request.form['url'],
-            'user_id': user_id
+            'user_id': loaded_user['user_id']
         }
 
-        image_id = images.insert_one(image)
+        image_id = images.insert_one(image).inserted_id
 
-    return render_template('add_image.html')
+    return render_template('add_image.html', user=user)
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -77,7 +79,6 @@ def login():
                 }
 
                 session['user'] = json.loads(json_util.dumps(data))
-                # session['user'] = request.form['username']
                 return redirect(url_for('index'))
 
         # TODO: Handle invalid username + password combo
