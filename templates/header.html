@@ -13,6 +13,11 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
+            {% if user %}
+                <li class="nav-item">
+                    <a href="{{ url_for('add_image') }}">Add Image</a>
+                </li>
+            {% endif %}
         </ul>
         <ul class="nav navbar-nav navbar-right">
             {% if user %}

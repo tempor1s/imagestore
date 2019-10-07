@@ -21,17 +21,14 @@ db = client.get_default_database()
 images = db.images
 users = db.users
 
-# TODO: Implement ID into user session for ez image access
 # TODO: Implement file upload image hosting? - could be for intensive
-
 
 @app.route('/', methods=['GET'])
 def index():
     user = None
     authenticated = None
     user_images = None
-    if 'user' in session:
-        
+    if 'user' in session:    
         # Hacky thing to get this to work lmao
         user = session['user']
         dumped_user = dumps(user)
@@ -67,7 +64,13 @@ def add_image():
 
 @app.route('/images/<image_id>/delete', methods=['POST'])
 def remove_image(image_id):
-    pass
+    if 'user' not in session:
+        return redirect(url_for('login'))
+
+    user = session['user']
+
+    images.delete_one({'_id': ObjectId(image_id)})
+    return redirect(url_for('index', user=user))
 
 
 @app.route('/images/<image_id>/edit', methods=['POST', 'GET'])
