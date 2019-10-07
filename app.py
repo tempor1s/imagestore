@@ -42,7 +42,7 @@ def index():
     return render_template('index.html', user=user, user_images=user_images)
 
 
-@app.route('/images/add', methods=['POST', 'GET'])
+@app.route('/images/new', methods=['POST', 'GET'])
 def add_image():
     """Add a new image to a user storage."""
     if 'user' not in session:
@@ -60,8 +60,46 @@ def add_image():
         }
 
         image_id = images.insert_one(image).inserted_id
+        return redirect(url_for('view_image', image_id=image_id))
 
     return render_template('add_image.html', user=user)
+
+
+@app.route('/images/<image_id>/delete', methods=['POST'])
+def remove_image(image_id):
+    pass
+
+
+@app.route('/images/<image_id>/edit', methods=['POST', 'GET'])
+def edit_image(image_id):
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    
+    user = session['user']
+        
+    if request.method == 'POST':
+        updated_image = {
+            'title': request.form['title'],
+            'url': request.form['url']
+        }
+
+        images.update_one({'_id': ObjectId(image_id)}, {'$set': updated_image})
+        
+        return redirect(url_for('view_image', image_id=image_id, user=user))
+
+    image = images.find_one({'_id': ObjectId(image_id)})
+    return render_template('edit_image.html', image=image)
+
+
+@app.route('/images/<image_id>', methods=['GET'])
+def view_image(image_id):
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    
+    user = session['user']
+    # TODO: Improve this
+    image = images.find_one({'_id': ObjectId(image_id)})
+    return render_template('single_image.html', image=image, user=user)
 
 
 @app.route('/login', methods=['POST', 'GET'])

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if image %}
+        <h1>Image View</h1>
+        <h2>Image Title: {{ image.title }}</h2>
+        <h3>Image Url: {{ image.url }}</h3>
+    {% else %}
+        <h1>Image not found.</h1>
+    {% endif %}
+{% endblock %}

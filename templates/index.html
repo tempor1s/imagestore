@@ -8,6 +8,8 @@
         {% for image in user_images %}
             {{ image.title }}
             {{ image.url }}
+            {{ image._id }}
+            <a href="/images/{{ image._id }}/edit">Edit</a>
         {% endfor %}
     {% endif %}
 </div>

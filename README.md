@@ -1,3 +1,3 @@
 # Image Store
 
-## Place to store your user images that only you can access!
+## Place to store image links for future reference!
