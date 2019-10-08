@@ -22,6 +22,7 @@ images = db.images
 users = db.users
 
 # TODO: Implement file upload image hosting? - could be for intensive
+# TODO: Implement static stying of photo on non-single-view page.
 
 @app.route('/', methods=['GET'])
 def index():
