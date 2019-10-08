@@ -4,7 +4,10 @@
     {% if image %}
         <h1>Image View</h1>
         <h2>Image Title: {{ image.title }}</h2>
-        <h3>Image Url: {{ image.url }}</h3>
+        <!-- TODO: Copy image URL to clipboard -->
+        <img src="{{ image.url }}" alt="You gave me a bad URL.  Please give me a direct link to the image file, not a gallery etc.">
+        <!-- TODO: Add edit and delete buttons -->
+        <a href=""></a>
     {% else %}
         <h1>Image not found.</h1>
     {% endif %}

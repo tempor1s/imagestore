@@ -62,7 +62,7 @@ def add_image():
     return render_template('add_image.html', user=user)
 
 
-@app.route('/images/<image_id>/delete', methods=['POST'])
+@app.route('/images/<image_id>/delete', methods=['GET'])
 def remove_image(image_id):
     if 'user' not in session:
         return redirect(url_for('login'))
@@ -70,10 +70,10 @@ def remove_image(image_id):
     user = session['user']
 
     images.delete_one({'_id': ObjectId(image_id)})
-    return redirect(url_for('index', user=user))
+    return redirect(url_for('index'))
 
 
-@app.route('/images/<image_id>/edit', methods=['POST', 'GET'])
+@app.route('/images/<image_id>/edit', methods=['GET', 'POST'])
 def edit_image(image_id):
     if 'user' not in session:
         return redirect(url_for('login'))

@@ -1,16 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="text-center">
-    <h1>Image Store</h1>
-    {% if user %}
-        <h1>You are now logged in as {{ user.username }}</h1>
-        
-        {% for image in user_images %}
-            {{ image.title }}
-            {{ image.url }}
-            {{ image._id }}
-            <a href="/images/{{ image._id }}/edit">Edit</a>
-        {% endfor %}
-    {% endif %}
+<div class="text-center image-container">
+    <div class="row">
+        {% if user %}
+            {% for image in user_images %}
+                <div class="col-md-6" class="image-item">
+                    <h4>{{ image.title }}</h4>
+                    <img src="{{ image.url }}" alt="You gave me a bad URL.  Please give me a direct link to the image file, not a gallery etc."><br>
+                    <a class="btn btn-primary" href="/images/{{ image._id }}/edit">Edit</a>
+                    <a class="btn btn-danger" href="/images/{{ image._id }}/delete">Delete</a>
+                </div>                
+            {% endfor %}
+        {% else %}
+        <h2>There are no images to display</h2>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

@@ -5,3 +5,15 @@
     width: 100%;
 }
 .navbar-brand {float:none;}
+
+img {
+    width: 100%;
+}
+
+#index-title {
+    padding-top: 3rem;
+}
+
+.image-container {
+    padding-top: 4rem;
+}

@@ -21,6 +21,7 @@
         </ul>
         <ul class="nav navbar-nav navbar-right">
             {% if user %}
+                <li style="padding-right: 1.5rem" class="nav-text">Logged in as <span style="color: grey">{{ user.username[0]|upper}}{{ user.username[1:] }}</span></li>
                 <li><a href="{{ url_for("logout") }}"><span class="fas fa-door-open"></span> Logout</a></li>
             {% else %}
                 <li class="pr-md-3"><a href="{{ url_for("login") }}"><span class="fas fa-user"></span> Login</a></li>
