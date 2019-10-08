@@ -6,10 +6,12 @@
             {% for image in user_images %}
                 <div class="col-md-6" class="image-item">
                     <h4>{{ image.title }}</h4>
-                    <img src="{{ image.url }}" alt="You gave me a bad URL.  Please give me a direct link to the image file, not a gallery etc."><br>
+                    <a href="/images/{{ image._id }}">
+                        <img src="{{ image.url }}" alt="Bad URL. Couldn't render"><br>
+                    </a>
                     <a class="btn btn-primary" href="/images/{{ image._id }}/edit">Edit</a>
                     <a class="btn btn-danger" href="/images/{{ image._id }}/delete">Delete</a>
-                </div>                
+                </div>   
             {% endfor %}
         {% else %}
         <h2>There are no images to display</h2>

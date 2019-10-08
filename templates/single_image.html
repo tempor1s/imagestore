@@ -2,12 +2,15 @@
 
 {% block content %}
     {% if image %}
-        <h1>Image View</h1>
-        <h2>Image Title: {{ image.title }}</h2>
-        <!-- TODO: Copy image URL to clipboard -->
-        <img src="{{ image.url }}" alt="You gave me a bad URL.  Please give me a direct link to the image file, not a gallery etc.">
-        <!-- TODO: Add edit and delete buttons -->
-        <a href=""></a>
+        <div class="text-center image-container">
+            <!-- TODO: Copy image URL to clipboard -->
+            <h4>{{ image.title }}</h4>
+            <a href="/images/{{ image._id }}">
+                <img src="{{ image.url }}" alt="Bad URL. Couldn't render"><br>
+            </a>
+            <a class="btn btn-primary" href="/images/{{ image._id }}/edit">Edit</a>
+            <a class="btn btn-danger" href="/images/{{ image._id }}/delete">Delete</a>
+        </div>
     {% else %}
         <h1>Image not found.</h1>
     {% endif %}
