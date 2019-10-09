@@ -32,8 +32,8 @@ def index():
     if 'user' in session:    
         # Hacky thing to get this to work lmao
         user = session['user']
-        dumped_user = dumps(user)
-        loaded_user = loads(dumped_user)
+        # dumped_user = dumps(user)
+        loaded_user = loads(dumps(user))
 
         user_images = images.find({'user_id': loaded_user['user_id']})
 
@@ -47,8 +47,8 @@ def add_image():
         return redirect(url_for('login'))
 
     user = session['user']
-    dumped_user = dumps(user)
-    loaded_user = loads(dumped_user)
+    # dumped_user = dumps(user)
+    loaded_user = loads(dumps(user))
 
     if request.method == 'POST':
         image = {
@@ -116,7 +116,6 @@ def login():
 
         if login_user:
             if bcrypt.hashpw(request.form['password'].encode('utf-8'), login_user['password']) == login_user['password']:
-                print(login_user['_id'])
                 data = {
                     'username': request.form['username'],
                     'user_id': login_user['_id']
@@ -124,8 +123,6 @@ def login():
 
                 session['user'] = json.loads(json_util.dumps(data))
                 return redirect(url_for('index'))
-
-        # TODO: Handle invalid username + password combo
 
     return render_template('login.html')
 
