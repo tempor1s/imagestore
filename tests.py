@@ -15,7 +15,8 @@ class ImageStoreTest(TestCase):
     
     def test_index(self):
         """Test the homepage of image store"""
-        pass
+        result = self.client.get('/')
+        self.assertEqual(result.status, '200 OK')
 
 
     def test_add_image(self):
